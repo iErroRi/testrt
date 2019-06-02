@@ -1,0 +1,18 @@
+version: '3'
+services:
+  mysql_db:
+    container_name: testrt_mysql_db
+    build:
+      context: ./docker
+      dockerfile: Dockerfile_mysql
+    volumes:
+    - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: testrt
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 1234
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    ports:
+      - 3306:3306
+
