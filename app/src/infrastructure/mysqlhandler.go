@@ -69,7 +69,7 @@ func NewMysqlHandler(connect string, logger *Logger) *MysqlHandler {
 	var db *sqlx.DB
 	var err error
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 15; i++ {
 		db, err = sqlx.Connect("mysql", connect)
 		if err == nil {
 			break
