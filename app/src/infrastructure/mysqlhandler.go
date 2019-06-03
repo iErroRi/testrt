@@ -30,7 +30,8 @@ comment 'Phone codes of country' DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unico
 `
 
 type MysqlHandler struct {
-	Conn *sqlx.DB
+	Conn   *sqlx.DB
+	logger *Logger
 }
 
 func (handler *MysqlHandler) Execute(statement string, model interface{}) {
@@ -64,7 +65,7 @@ func (r MysqlRow) Next() bool {
 	return r.Rows.Next()
 }
 
-func NewMysqlHandler(connect string) *MysqlHandler {
+func NewMysqlHandler(connect string, logger *Logger) *MysqlHandler {
 	var db *sqlx.DB
 	var err error
 
@@ -73,7 +74,7 @@ func NewMysqlHandler(connect string) *MysqlHandler {
 		if err == nil {
 			break
 		} else {
-			fmt.Println(err)
+			logger.Error("Ошибка подключения " + err.Error())
 		}
 
 		time.Sleep(1 * time.Second)
@@ -88,5 +89,6 @@ func NewMysqlHandler(connect string) *MysqlHandler {
 
 	mysqlHandler := new(MysqlHandler)
 	mysqlHandler.Conn = db
+	mysqlHandler.logger = logger
 	return mysqlHandler
 }

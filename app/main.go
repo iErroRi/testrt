@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	dbHandler := infrastructure.NewMysqlHandler("user:1234@(mysql_db:3306)/testrt")
-
 	logger := new(infrastructure.Logger)
+
+	dbHandler := infrastructure.NewMysqlHandler("user:1234@(mysql_db:3306)/testrt", logger)
 
 	handlers := make(map[string]interfaces.DbHandler)
 	handlers["DbCountryRepo"] = dbHandler
@@ -29,6 +29,10 @@ func main() {
 	webserviceHandler := interfaces.WebserviceHandler{}
 	webserviceHandler.CodeInteractor = codeInteractor
 	webserviceHandler.ReloadInteractor = reloadInteractor
+
+	if _, err := reloadInteractor.Reload(); err != nil {
+		logger.Error("Ошибка обновления базы данных городов и кодов")
+	}
 
 	server := infrastructure.NewServer(logger)
 

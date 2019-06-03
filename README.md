@@ -1,12 +1,20 @@
 # testrt
 ## Installing
 
-mkdir /srv/testrt
+`sudo mkdir /srv/testrt`  
+`sudo chmod 777 /srv/testrt` для простоты    
+`cd /srv/testrt`  
+`git clone git@github.com:iErroRi/testrt.git .`  
+`docker-compose build`  
+`docker-compose up`  
 
-cd /srv/testrt
+## Общее
+Не успел реализовать 4 пунк с юнит тестом (  
+Немного уперся в "Чистую архитектуру". Взял за основу шаблон https://github.com/manuelkiessling/go-cleanarchitecture.  
+Остался копипаст и недоработки описанные автором.     
 
-git clone git@github.com:iErroRi/testrt.git .
-
-docker-compose build
-
-docker-compose up
+## Что еще хотелось бы успеть закончить
+- При обновлении использовать транзацию и транкейтить таблици и заполнять их в ней. Тогда не будет фейла в момент обновления и если что можно откатится.  
+- Вынести конфигурацию в переменные окружения  
+- Написать тесты, с ними совсем не знаком и просто не успел  
+- Миграций нет, тут они избыточны конечно но в целом    
