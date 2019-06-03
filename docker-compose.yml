@@ -16,3 +16,13 @@ services:
     ports:
       - 3306:3306
 
+  app:
+    container_name: testrt_app
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile_app
+    restart: always
+    depends_on:
+      - mysql_db
+    ports:
+      - 8080:8080

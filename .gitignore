@@ -1,2 +1,6 @@
 .idea
 mysql
+app/pkg
+app/src/github.com/
+app/src/golang.org/
+app/src/cloud.google.com/
