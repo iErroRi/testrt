@@ -8,7 +8,7 @@ import (
 type CodeInteractor struct {
 	CountryRepository domain.CountryRepository
 	CodeRepository    domain.CodeRepository
-	Logger            *infrastructure.Logger
+	Logger            infrastructure.Log
 }
 
 func (interactor *CodeInteractor) Code(countryName string) (domain.Code, error) {

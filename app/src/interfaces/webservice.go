@@ -40,7 +40,7 @@ func (handler WebserviceHandler) Reload(res http.ResponseWriter, req *http.Reque
 
 	count, err := handler.ReloadInteractor.Reload()
 	if err != nil {
-		res.WriteHeader(http.StatusMethodNotAllowed)
+		res.WriteHeader(http.StatusInternalServerError)
 	}
 
 	if err := json.NewEncoder(res).Encode(fmt.Sprint("Complete loaded ", count)); err != nil {

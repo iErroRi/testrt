@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func NewServer(logger *Logger) *Server {
+func NewServer(logger Log) *Server {
 	server := new(Server)
 	server.Instance = mux.NewRouter()
 	server.logger = logger
@@ -15,7 +15,7 @@ func NewServer(logger *Logger) *Server {
 
 type Server struct {
 	Instance *mux.Router
-	logger   *Logger
+	logger   Log
 }
 
 func (s Server) AddRoute(method string, url string, handler func(res http.ResponseWriter, req *http.Request)) {
@@ -32,12 +32,12 @@ func (s Server) ListenAndServe() {
 	http.Handle("/", s.Instance)
 
 	s.Instance.NotFoundHandler = http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		res.WriteHeader(404)
+		res.WriteHeader(http.StatusNotFound)
 		s.logger.Info("Not found " + req.URL.Path)
 	})
 
 	s.Instance.MethodNotAllowedHandler = http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
-		res.WriteHeader(403)
+		res.WriteHeader(http.StatusMethodNotAllowed)
 		s.logger.Info("Not allow " + req.URL.Path)
 	})
 

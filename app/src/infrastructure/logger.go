@@ -4,6 +4,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+type Log interface {
+	Info(mess string)
+	Error(mess string)
+}
+
 type Logger struct{}
 
 func (logger Logger) Info(mess string) {

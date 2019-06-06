@@ -17,13 +17,17 @@ func main() {
 	handlers["DbCodeRepo"] = dbHandler
 
 	codeInteractor := new(usecases.CodeInteractor)
-	codeInteractor.CountryRepository = interfaces.NewDbCountryRepo(handlers)
-	codeInteractor.CodeRepository = interfaces.NewDbCodeRepo(handlers)
+	reloadInteractor := new(usecases.ReloadInteractor)
+
+	countryRepo := interfaces.NewDbCountryRepo(handlers)
+	codeRepo := interfaces.NewDbCodeRepo(handlers)
+
+	codeInteractor.CountryRepository = countryRepo
+	codeInteractor.CodeRepository = codeRepo
 	codeInteractor.Logger = logger
 
-	reloadInteractor := new(usecases.ReloadInteractor)
-	reloadInteractor.CountryRepository = interfaces.NewDbCountryRepo(handlers)
-	reloadInteractor.CodeRepository = interfaces.NewDbCodeRepo(handlers)
+	reloadInteractor.CountryRepository = countryRepo
+	reloadInteractor.CodeRepository = codeRepo
 	reloadInteractor.Logger = logger
 
 	webserviceHandler := interfaces.WebserviceHandler{}
@@ -34,6 +38,11 @@ func main() {
 		logger.Error("Ошибка обновления базы данных городов и кодов")
 	}
 
+	server := Server(webserviceHandler, logger)
+	server.ListenAndServe()
+}
+
+func Server(webserviceHandler interfaces.WebserviceHandler, logger infrastructure.Log) *infrastructure.Server {
 	server := infrastructure.NewServer(logger)
 
 	server.AddRoute("GET", "/code/{name:[a-zA-Z ]+}", func(res http.ResponseWriter, req *http.Request) {
@@ -44,5 +53,5 @@ func main() {
 		webserviceHandler.Reload(res, req, server.Params(req))
 	})
 
-	server.ListenAndServe()
+	return server
 }
