@@ -28,6 +28,7 @@ func main() {
 
 	reloadInteractor.CountryRepository = countryRepo
 	reloadInteractor.CodeRepository = codeRepo
+	reloadInteractor.HttpClient = infrastructure.NewHttpClient()
 	reloadInteractor.Logger = logger
 
 	webserviceHandler := interfaces.WebserviceHandler{}

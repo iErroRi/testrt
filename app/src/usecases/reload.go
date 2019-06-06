@@ -2,34 +2,21 @@ package usecases
 
 import (
 	"domain"
-	"encoding/json"
 	"infrastructure"
-	"net/http"
-	"time"
 )
 
 type ReloadInteractor struct {
 	CountryRepository domain.CountryRepository
 	CodeRepository    domain.CodeRepository
+	HttpClient        *infrastructure.HttpClient
 	Logger            *infrastructure.Logger
-}
-
-func (interactor *ReloadInteractor) getJson(url string, target interface{}) error {
-	var myClient = &http.Client{Timeout: 10 * time.Second}
-	r, err := myClient.Get(url)
-	if err != nil {
-		return err
-	}
-	defer r.Body.Close()
-
-	return json.NewDecoder(r.Body).Decode(target)
 }
 
 func (interactor *ReloadInteractor) Reload() (int, error) {
 	interactor.Logger.Info("Start reload")
 
 	countries := make(map[string]string, 0)
-	if err := interactor.getJson("http://country.io/names.json", &countries); err != nil {
+	if err := interactor.HttpClient.GetJson("http://country.io/names.json", &countries); err != nil {
 		interactor.Logger.Info("Error get names.json " + err.Error())
 		return 0, err
 	}
@@ -44,7 +31,7 @@ func (interactor *ReloadInteractor) Reload() (int, error) {
 
 	codes := make(map[string]string, 0)
 
-	if err := interactor.getJson("http://country.io/phone.json", &codes); err != nil {
+	if err := interactor.HttpClient.GetJson("http://country.io/phone.json", &codes); err != nil {
 		interactor.Logger.Info("Error get phone.json " + err.Error())
 		return 0, err
 	}
